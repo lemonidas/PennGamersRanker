@@ -57,4 +57,11 @@ main = do
                in
                validateChoice
     return ranks
-  putStrLn $ unlines $ map show $ minEntropy n k names choices (zip names ranksPerPlayer)
+  let sortedSplits = minEntropy n k names choices (zip names ranksPerPlayer)
+  let printSplit (Just score, (group1, group2, game1, game2)) = do
+       putStrLn $ "Group 1: " ++ unwords group1 ++ (printf " play game: %s (score %d)." game1 score)
+       putStrLn $ "Group 2: " ++ unwords group2 ++ (printf " play game: %s (score %d)." game2 score)
+  putStrLn "Best option:"
+  printSplit $ head sortedSplits
+  putStrLn "Other close options:"
+  forM_ (take 9 $ tail sortedSplits) $ \split -> printSplit split >> putStrLn ""
